@@ -1,0 +1,17 @@
+# STM32CubeIDE / Eclipse build artifacts
+Debug/
+Release/
+*.elf
+*.bin
+*.hex
+*.map
+*.o
+*.d
+*.su
+
+# IDE / User specific settings
+.settings/language.settings.xml
+
+# System files
+.DS_Store
+Thumbs.db
