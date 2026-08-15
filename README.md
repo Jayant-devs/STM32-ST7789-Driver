@@ -11,6 +11,19 @@ This repository serves as **Phase 1** of a larger embedded vision project aimed 
 
 ---
 
+## 🎥 Hardware Demo & Benchmark
+
+https://github.com/user-attachments/assets/demo.mp4
+
+<div align="center">
+  <video src="Docs/demo.mp4" controls="controls" width="100%" style="max-height:500px;">
+    Your browser does not support the video tag.
+  </video>
+  <p><em>ST7789 240×320 Display Rendering Demo on STM32F446RE</em></p>
+</div>
+
+---
+
 ## 📌 Features & Highlights
 
 - **240×320 Native Resolution Support**: Added custom configuration macros and display dimensions.
@@ -33,6 +46,17 @@ This repository serves as **Phase 1** of a larger embedded vision project aimed 
 | **Transfer Pipeline** | SPI TX with DMA |
 | **IDE & Framework** | STM32CubeIDE + STM32F4 HAL |
 
+### ⚙️ Peripheral & CubeMX Configuration
+
+#### 📍 Pinout & GPIO Configuration
+![Pin Configuration](Docs/pin_config.png)
+
+#### 🔌 SPI2 Parameter & DMA Settings
+![SPI Configuration](Docs/spi_config.png)
+
+#### ⚡ Clock Tree Configuration
+![Clock Configuration](Docs/clock_config.png)
+
 ---
 
 ## 🚀 Performance Benchmarks
@@ -43,6 +67,9 @@ All benchmark metrics were collected operating at maximum tuned SPI clock rates 
 | :--- | :---: | :---: | :---: | :--- |
 | **Full-Screen Fill** | 240 × 320 | **56 ms** | **~18 FPS** | Complete panel write using DMA color fill |
 | **Image Frame Render** | 213 × 120 | **18 ms** | **~55 FPS** | Simulates future camera video window feed |
+
+### 📊 Benchmark FPS Result Output
+![FPS Result](Docs/fps_result.png)
 
 ### SPI Clock Tuning Impact
 
@@ -81,7 +108,12 @@ The base driver was originally designed for smaller variants (135x240, 170x320, 
 │       └── image.c            # Test image array data (RGB565)
 ├── Docs/
 │   ├── ST7789_Library_Modifications.md  # Detailed modification log & technical notes
-│   └── STM32_ST7789_Display_Benchmark.md # Benchmark breakdown & milestone documentation
+│   ├── STM32_ST7789_Display_Benchmark.md # Benchmark breakdown & milestone documentation
+│   ├── clock_config.png                 # STM32CubeMX RCC clock configuration
+│   ├── pin_config.png                   # STM32CubeMX pinout diagram
+│   ├── spi_config.png                   # SPI2 peripheral & DMA parameters
+│   ├── fps_result.png                   # Benchmark FPS & execution time log
+│   └── demo.mp4                         # Display demo video clip
 ├── Drivers/                    # STM32F4xx HAL and CMSIS driver packages
 ├── .gitignore                  # Git ignore rules for STM32CubeIDE build output
 ├── STM32F446RETX_FLASH.ld      # Linker script for flash execution
