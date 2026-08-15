@@ -49,6 +49,7 @@ https://github.com/user-attachments/assets/8d3bd8ef-d46b-4871-bd2e-a36adf9d40a7
 
 #### 🔌 SPI2 Parameter & DMA Settings
 ![SPI Configuration](Docs/spi_config.png)
+> *Note: The CubeMX configuration screenshot above shows an initial conservative SPI Prescaler of **4** (11.25 MHz). In final benchmarking code, the prescaler was tuned to **2** (~22.5 MHz) to maximize bandwidth and double the frame rate.*
 
 #### ⚡ Clock Tree Configuration
 ![Clock Configuration](Docs/clock_config.png)
@@ -57,26 +58,28 @@ https://github.com/user-attachments/assets/8d3bd8ef-d46b-4871-bd2e-a36adf9d40a7
 
 ## 🚀 Performance Benchmarks
 
-All benchmark metrics were collected operating at maximum tuned SPI clock rates with DMA enabled.
+Benchmark metrics comparing polled software rendering vs DMA block transfers and SPI prescaler clock tuning.
 
-| Test Operation | Target Resolution | Frame Time | Frame Rate (FPS) | Notes |
-| :--- | :---: | :---: | :---: | :--- |
-| **Full-Screen Fill** | 240 × 320 | **56 ms** | **~18 FPS** | Complete panel write using DMA color fill |
-| **Image Frame Render** | 213 × 120 | **18 ms** | **~55 FPS** | Simulates future camera video window feed |
+| Test Operation | Rendering Method | Target Resolution | Frame Time | Frame Rate (FPS) | Notes |
+| :--- | :---: | :---: | :---: | :---: | :--- |
+| **Full-Screen Fill** | **Polled (No DMA)** | 240 × 320 | **~340 ms** | **~3 FPS** | Pixel-by-pixel `DrawPixel` line loop fallback |
+| **Full-Screen Fill** | **DMA Accelerated** | 240 × 320 | **56 ms** | **~18 FPS** | Complete panel write using non-blocking DMA block fill |
+| **Image Frame Render** | **DMA Accelerated** | 213 × 120 | **18 ms** | **~55 FPS** | Simulates future camera video window feed |
 
 ### 📊 Benchmark FPS Result Output
 ![FPS Result](Docs/fps_result.png)
 
-### SPI Clock Tuning Impact
+### ⏱️ Performance Tuning Breakdown
 
-| SPI Configuration | Full-Screen (240×320) Fill Time |
-| :--- | :---: |
-| Default SPI Prescaler | 110 ms |
-| **Optimized (Prescaler = 2)** | **55 ms** (2x Speedup) |
+| Transfer Mode / Configuration | Clock / Method | Full-Screen (240×320) Fill Time | Throughput Speedup |
+| :--- | :--- | :---: | :---: |
+| **Polled SPI (No DMA)** | Pixel Loop (`DrawPixel`) | ~340 ms | Baseline (1x) |
+| **DMA (Prescaler = 4)** | SPI @ 11.25 MHz | 110 ms | ~3.1x Faster |
+| **DMA (Prescaler = 2)** | SPI @ 22.5 MHz | **56 ms** | **~6.1x Faster** |
 
 ---
 
-## 🔧 Core Library Modifications
+## 🔧 Core Library Modifications & Engineering Docs
 
 The base driver was originally designed for smaller variants (135x240, 170x320, 240x240). Key adjustments included:
 
@@ -84,6 +87,10 @@ The base driver was originally designed for smaller variants (135x240, 170x320, 
 2. **Rotation & Offset**: Set `ST7789_ROTATION 2` and verified shift values (`X_SHIFT`, `Y_SHIFT`) to prevent cropped coordinate spaces.
 3. **RGB565 Endian Swapping**: Injected byte-swap routine before triggering DMA block transfers to align with the ST7789 big-endian SPI stream protocol.
 4. **DMA Acceleration**: Verified SPI TX DMA channel stability after initial polled SPI bring-up.
+
+📖 **Detailed Documentation**:
+- 📝 [**Docs/LIBRARY_MODIFICATIONS.md**](Docs/LIBRARY_MODIFICATIONS.md) — Comprehensive technical modification log separating custom additions from Floyd-Fish's original base.
+- 🐛 [**Docs/DEBUGGING_JOURNAL.md**](Docs/DEBUGGING_JOURNAL.md) — Deep-dive engineering journal covering real-world bugs (endianness color bugs, DMA initialization, rendering latencies, & shift offsets).
 
 ---
 
@@ -103,11 +110,12 @@ The base driver was originally designed for smaller variants (135x240, 170x320, 
 │       ├── fonts.c            # Font lookup tables
 │       └── image.c            # Test image array data (RGB565)
 ├── Docs/
-│   ├── ST7789_Library_Modifications.md  # Detailed modification log & technical notes
+│   ├── LIBRARY_MODIFICATIONS.md         # Detailed modification log separating base vs custom work
+│   ├── DEBUGGING_JOURNAL.md             # Real-world embedded systems debugging log
 │   ├── STM32_ST7789_Display_Benchmark.md # Benchmark breakdown & milestone documentation
 │   ├── clock_config.png                 # STM32CubeMX RCC clock configuration
 │   ├── pin_config.png                   # STM32CubeMX pinout diagram
-│   ├── spi_config.png                   # SPI2 peripheral & DMA parameters
+│   ├── spi_config.png                   # SPI2 peripheral & DMA parameters (Prescaler 4)
 │   ├── fps_result.png                   # Benchmark FPS & execution time log
 │   └── demo.mp4                         # Display demo video clip
 ├── Drivers/                    # STM32F4xx HAL and CMSIS driver packages
