@@ -4,19 +4,18 @@
 [![Display](https://img.shields.io/badge/Display-ST7789_240x320-red.svg)](https://www.displayfuture.com/Display/datasheet/controller/ST7789V.pdf)
 [![Interface](https://img.shields.io/badge/Interface-SPI2%20%2B%20DMA-green.svg)]()
 [![Status](https://img.shields.io/badge/Phase%201-Bring--Up%20%26%20Benchmarking%20Complete-brightgreen.svg)]()
+[![Tag](https://img.shields.io/badge/Release-v1.0-blue.svg)]()
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](LICENSE)
 
 High-performance ST7789 (240×320 2.4" SPI TFT LCD) display driver bring-up and benchmarking implementation for the **STM32F446RE** microcontroller.
 
-This repository serves as **Phase 1** of a larger embedded vision project aimed at streaming real-time video feeds from an OV7670 camera via DCMI + DMA to the TFT display.
+This repository serves as the foundation for a multi-phase embedded vision project, progressing from basic LCD bring-up and DMA display acceleration to double-buffering, camera initialization, DCMI frame capture, and real-time video feeds.
 
 ---
 
 ## 🎥 Hardware Demo & Benchmark
 
 https://github.com/user-attachments/assets/8d3bd8ef-d46b-4871-bd2e-a36adf9d40a7
-
----
 
 ---
 
@@ -45,14 +44,14 @@ https://github.com/user-attachments/assets/8d3bd8ef-d46b-4871-bd2e-a36adf9d40a7
 ### ⚙️ Peripheral & CubeMX Configuration
 
 #### 📍 Pinout & GPIO Configuration
-![Pin Configuration](Docs/pin_config.png)
+![Pin Configuration](Docs/phase1/pin_config.png)
 
 #### 🔌 SPI2 Parameter & DMA Settings
-![SPI Configuration](Docs/spi_config.png)
+![SPI Configuration](Docs/phase1/spi_config.png)
 > *Note: The CubeMX configuration screenshot above shows an initial conservative SPI Prescaler of **4** (11.25 MHz). In final benchmarking code, the prescaler was tuned to **2** (~22.5 MHz) to maximize bandwidth and double the frame rate.*
 
 #### ⚡ Clock Tree Configuration
-![Clock Configuration](Docs/clock_config.png)
+![Clock Configuration](Docs/phase1/clock_config.png)
 
 ---
 
@@ -67,7 +66,7 @@ Benchmark metrics comparing polled software rendering vs DMA block transfers and
 | **Image Frame Render** | **DMA Accelerated** | 213 × 120 | **18 ms** | **~55 FPS** | Simulates future camera video window feed |
 
 ### 📊 Benchmark FPS Result Output
-![FPS Result](Docs/fps_result.png)
+![FPS Result](Docs/phase1/fps_result.png)
 
 ### ⏱️ Performance Tuning Breakdown
 
@@ -88,51 +87,57 @@ The base driver was originally designed for smaller variants (135x240, 170x320, 
 3. **RGB565 Endian Swapping**: Injected byte-swap routine before triggering DMA block transfers to align with the ST7789 big-endian SPI stream protocol.
 4. **DMA Acceleration**: Verified SPI TX DMA channel stability after initial polled SPI bring-up.
 
-📖 **Detailed Documentation**:
-- 📝 [**Docs/LIBRARY_MODIFICATIONS.md**](Docs/LIBRARY_MODIFICATIONS.md) — Comprehensive technical modification log separating custom additions from Floyd-Fish's original base.
-- 🐛 [**Docs/DEBUGGING_JOURNAL.md**](Docs/DEBUGGING_JOURNAL.md) — Deep-dive engineering journal covering real-world bugs (endianness color bugs, DMA initialization, rendering latencies, & shift offsets).
+📖 **Detailed Phase Documentation**:
+- 📝 [**Phase 1: Library Modifications**](Docs/phase1/LIBRARY_MODIFICATIONS.md) — Technical modification log separating custom additions from Floyd-Fish's original base.
+- 🐛 [**Phase 1: Debugging Journal**](Docs/phase1/DEBUGGING_JOURNAL.md) — Deep-dive engineering journal covering real-world bugs (endianness color bugs, DMA initialization, rendering latencies, & shift offsets).
+- 📐 [**Phase 2 Architecture**](Docs/phase2/architecture.md) — Specifications for the custom DMA-optimized display driver API.
+- 📷 [**Phase 3 & Camera Pipeline**](Docs/phase3/ov7670_dcmi.md) — Architecture outline for OV7670 camera, DCMI, and DMA double buffering.
 
 ---
 
 ## 📂 Repository Structure
 
 ```text
-.
-├── Core/
-│   ├── Inc/
-│   │   ├── main.h             # Pin assignments & peripheral header
-│   │   ├── st7789.h           # ST7789 configuration, resolution macros & function declarations
-│   │   ├── fonts.h            # Font definitions
-│   │   └── image.h            # Test image header
-│   └── Src/
-│       ├── main.c             # Application entry point & benchmark loop
-│       ├── st7789.c           # ST7789 driver implementation & DMA send logic
-│       ├── fonts.c            # Font lookup tables
-│       └── image.c            # Test image array data (RGB565)
+STM32-ST7789-Driver
+│
+├── README.md
+├── LICENSE
+├── .gitignore
 ├── Docs/
-│   ├── LIBRARY_MODIFICATIONS.md         # Detailed modification log separating base vs custom work
-│   ├── DEBUGGING_JOURNAL.md             # Real-world embedded systems debugging log
-│   ├── STM32_ST7789_Display_Benchmark.md # Benchmark breakdown & milestone documentation
-│   ├── clock_config.png                 # STM32CubeMX RCC clock configuration
-│   ├── pin_config.png                   # STM32CubeMX pinout diagram
-│   ├── spi_config.png                   # SPI2 peripheral & DMA parameters (Prescaler 4)
-│   ├── fps_result.png                   # Benchmark FPS & execution time log
-│   └── demo.mp4                         # Display demo video clip
-├── Drivers/                    # STM32F4xx HAL and CMSIS driver packages
-├── .gitignore                  # Git ignore rules for STM32CubeIDE build output
-├── STM32F446RETX_FLASH.ld      # Linker script for flash execution
-└── tft_test.ioc                # STM32CubeMX device configuration file
+│   ├── phase1/                             # Phase 1: Display Bring-up & Benchmarking
+│   │   ├── LIBRARY_MODIFICATIONS.md       # Developer modification changelog
+│   │   ├── DEBUGGING_JOURNAL.md           # Real-world embedded systems debugging log
+│   │   ├── STM32_ST7789_Display_Benchmark.md
+│   │   ├── clock_config.png
+│   │   ├── pin_config.png
+│   │   ├── spi_config.png
+│   │   ├── fps_result.png
+│   │   └── demo.mp4
+│   │
+│   ├── phase2/                             # Phase 2: Custom Driver Architecture
+│   │   └── architecture.md
+│   │
+│   └── phase3/                             # Phase 3+: Camera & DCMI Integration
+│       └── ov7670_dcmi.md
+│
+├── Core/
+│   ├── Inc/                                # Header files (st7789.h, main.h, etc.)
+│   └── Src/                                # Source files (st7789.c, main.c, etc.)
+├── Drivers/                                # STM32F4xx HAL & CMSIS libraries
+├── STM32F446RETX_FLASH.ld                  # Linker script
+└── tft_test.ioc                            # STM32CubeMX hardware configuration
 ```
 
 ---
 
-## 🗺️ Project Roadmap
+## 🗺️ Project Milestones & Roadmap
 
-- [x] **Phase 1**: ST7789 240x320 display bring-up, DMA integration, & performance benchmarking.
+- [x] **Phase 1 (v1.0)**: ST7789 240x320 display bring-up, DMA integration, & performance benchmarking.
 - [ ] **Phase 2**: Custom DMA-optimized line-buffered display driver.
-- [ ] **Phase 3**: OV7670 camera initialization via I2C (SCCB).
-- [ ] **Phase 4**: Frame capture using STM32 DCMI + DMA.
-- [ ] **Phase 5**: Live camera feed streaming to ST7789 display (~30+ FPS goal).
+- [ ] **Phase 3**: Double-buffering architecture on STM32 SRAM.
+- [ ] **Phase 4**: OV7670 camera initialization via I2C (SCCB).
+- [ ] **Phase 5**: DCMI + DMA frame capture configuration.
+- [ ] **Phase 6**: Real-time camera-to-TFT video streaming pipeline.
 
 ---
 
@@ -152,7 +157,7 @@ The base driver was originally designed for smaller variants (135x240, 170x320, 
 
 ## 🤝 Acknowledgments
 
-The core ST7789 library implementation in this project is based on the initial work by **Floyd-Fish**:
+The core ST7789 library implementation in Phase 1 is based on the initial work by **Floyd-Fish**:
 - Original Repository: [Floyd-Fish/ST7789-STM32](https://github.com/Floyd-Fish/ST7789-STM32)
 
 ---
