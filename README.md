@@ -15,12 +15,7 @@ This repository serves as **Phase 1** of a larger embedded vision project aimed 
 
 https://github.com/user-attachments/assets/8d3bd8ef-d46b-4871-bd2e-a36adf9d40a7
 
-<div align="center">
-  <video src="Docs/demo.mp4" controls="controls" width="100%" style="max-height:500px;">
-    Your browser does not support the video tag.
-  </video>
-  <p><em>ST7789 240×320 Display Rendering Demo on STM32F446RE</em></p>
-</div>
+---
 
 ---
 
