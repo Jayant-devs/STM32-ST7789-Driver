@@ -1,21 +1,36 @@
-# STM32F446RE + ST7789 TFT Display Driver & Performance Benchmarks
+# STM32F446RE + ST7789 TFT Display Driver
+
+> **DMA-optimized ST7789 display driver and performance benchmarking for the STM32F446RE.**
 
 [![Board](https://img.shields.io/badge/MCU-STM32F446RE-blue.svg)](https://www.st.com/en/microcontrollers-microprocessors/stm32f446re.html)
 [![Display](https://img.shields.io/badge/Display-ST7789_240x320-red.svg)](https://www.displayfuture.com/Display/datasheet/controller/ST7789V.pdf)
 [![Interface](https://img.shields.io/badge/Interface-SPI2%20%2B%20DMA-green.svg)]()
 [![Status](https://img.shields.io/badge/Phase%201-Bring--Up%20%26%20Benchmarking%20Complete-brightgreen.svg)]()
-[![Tag](https://img.shields.io/badge/Release-v1.0-blue.svg)]()
+[![Release](https://img.shields.io/badge/Release-v1.0-blue.svg)](CHANGELOG.md)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](LICENSE)
-
-High-performance ST7789 (240×320 2.4" SPI TFT LCD) display driver bring-up and benchmarking implementation for the **STM32F446RE** microcontroller.
-
-This repository serves as the foundation for a multi-phase embedded vision project, progressing from basic LCD bring-up and DMA display acceleration to double-buffering, camera initialization, DCMI frame capture, and real-time video feeds.
 
 ---
 
 ## 🎥 Hardware Demo & Benchmark
 
+![ST7789 Display Benchmark Demo](Docs/phase1/demo_image.png)
+
 https://github.com/user-attachments/assets/8d3bd8ef-d46b-4871-bd2e-a36adf9d40a7
+
+---
+
+## 🔌 Hardware Connections & Wiring
+
+| ST7789 Display Pin | STM32F446RE Pin | Signal / Function |
+| :--- | :--- | :--- |
+| **VCC** | 3.3 V | Power Supply (3.3V) |
+| **GND** | GND | Power Ground |
+| **SCL / SCK** | **PB13** | `SPI2_SCK` (Serial Clock) |
+| **SDA / MOSI** | **PB15** | `SPI2_MOSI` (Master Out Slave In) |
+| **SDO / MISO** | **PB14** | `SPI2_MISO` (Master In Slave Out) |
+| **RES / RST** | **PC6** | Display Hardware Reset |
+| **DC / RS** | **PC5** | Data / Command Selection |
+| **CS** | **PA8** | SPI Chip Select |
 
 ---
 
@@ -88,6 +103,7 @@ The base driver was originally designed for smaller variants (135x240, 170x320, 
 4. **DMA Acceleration**: Verified SPI TX DMA channel stability after initial polled SPI bring-up.
 
 📖 **Detailed Phase Documentation**:
+- 📋 [**CHANGELOG.md**](CHANGELOG.md) — Version history and release notes.
 - 📝 [**Phase 1: Library Modifications**](Docs/phase1/LIBRARY_MODIFICATIONS.md) — Technical modification log separating custom additions from Floyd-Fish's original base.
 - 🐛 [**Phase 1: Debugging Journal**](Docs/phase1/DEBUGGING_JOURNAL.md) — Deep-dive engineering journal covering real-world bugs (endianness color bugs, DMA initialization, rendering latencies, & shift offsets).
 - 📐 [**Phase 2 Architecture**](Docs/phase2/architecture.md) — Specifications for the custom DMA-optimized display driver API.
@@ -101,6 +117,7 @@ The base driver was originally designed for smaller variants (135x240, 170x320, 
 STM32-ST7789-Driver
 │
 ├── README.md
+├── CHANGELOG.md
 ├── LICENSE
 ├── .gitignore
 ├── Docs/
@@ -112,6 +129,7 @@ STM32-ST7789-Driver
 │   │   ├── pin_config.png
 │   │   ├── spi_config.png
 │   │   ├── fps_result.png
+│   │   ├── demo_image.png
 │   │   └── demo.mp4
 │   │
 │   ├── phase2/                             # Phase 2: Custom Driver Architecture
@@ -133,11 +151,11 @@ STM32-ST7789-Driver
 ## 🗺️ Project Milestones & Roadmap
 
 - [x] **Phase 1 (v1.0)**: ST7789 240x320 display bring-up, DMA integration, & performance benchmarking.
-- [ ] **Phase 2**: Custom DMA-optimized line-buffered display driver.
-- [ ] **Phase 3**: Double-buffering architecture on STM32 SRAM.
-- [ ] **Phase 4**: OV7670 camera initialization via I2C (SCCB).
-- [ ] **Phase 5**: DCMI + DMA frame capture configuration.
-- [ ] **Phase 6**: Real-time camera-to-TFT video streaming pipeline.
+- [ ] **Phase 2 (v2.0)**: Custom DMA-optimized line-buffered display driver.
+- [ ] **Phase 3 (v3.0)**: Double-buffering architecture on STM32 SRAM.
+- [ ] **Phase 4 (v4.0)**: OV7670 camera initialization via I2C / SCCB driver.
+- [ ] **Phase 5 (v5.0)**: DCMI + DMA frame capture configuration.
+- [ ] **Phase 6 (v6.0)**: Real-time camera-to-TFT video streaming pipeline.
 
 ---
 
