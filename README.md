@@ -13,7 +13,7 @@ This repository serves as **Phase 1** of a larger embedded vision project aimed 
 
 ## 🎥 Hardware Demo & Benchmark
 
-https://github.com/user-attachments/assets/demo.mp4
+https://github.com/user-attachments/assets/8d3bd8ef-d46b-4871-bd2e-a36adf9d40a7
 
 <div align="center">
   <video src="Docs/demo.mp4" controls="controls" width="100%" style="max-height:500px;">
