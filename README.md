@@ -4,6 +4,7 @@
 [![Display](https://img.shields.io/badge/Display-ST7789_240x320-red.svg)](https://www.displayfuture.com/Display/datasheet/controller/ST7789V.pdf)
 [![Interface](https://img.shields.io/badge/Interface-SPI2%20%2B%20DMA-green.svg)]()
 [![Status](https://img.shields.io/badge/Phase%201-Bring--Up%20%26%20Benchmarking%20Complete-brightgreen.svg)]()
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](LICENSE)
 
 High-performance ST7789 (240×320 2.4" SPI TFT LCD) display driver bring-up and benchmarking implementation for the **STM32F446RE** microcontroller.
 
@@ -150,4 +151,4 @@ The core ST7789 library implementation in this project is based on the initial w
 
 ## 📄 License
 
-This project is open-source and available under the [MIT License](LICENSE).
+This project is licensed under the **GNU General Public License v3.0** (GPL-3.0) because it incorporates and modifies code derived from the GPL-3.0 licensed ST7789 library by Floyd-Fish. See the [LICENSE](LICENSE) file for full details.
