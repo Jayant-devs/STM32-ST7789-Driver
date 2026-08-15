@@ -104,7 +104,7 @@ The base driver was originally designed for smaller variants (135x240, 170x320, 
 
 1. Clone this repository to your workspace:
    ```bash
-   git clone https://github.com/YOUR_USERNAME/YOUR_REPOSITORY.git
+   git clone https://github.com/Jayant-devs/STM32-ST7789-Driver.git
    ```
 2. Open **STM32CubeIDE**.
 3. Go to **File -> Import... -> General -> Existing Projects into Workspace**.
